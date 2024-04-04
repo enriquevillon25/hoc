@@ -1,58 +1,32 @@
 import "./App.css";
-import { useState, useEffect } from "react";
 
-const withMousePosition = (WrappedComponent: any) => {
+interface PersonInterface {
+  name: string;
+  muscle: boolean;
+  weight: string;
+}
+
+const Enrique = ({ name = "Enrique", muscle, weight }: PersonInterface) => {
+  return (
+    <span style={{ fontWeight: weight }}>{`Hola soy ${name} y ${
+      muscle ? "si" : "no"
+    } soy musculoso`}</span>
+  );
+};
+
+const Gym = (WrappedComponent: any) => {
   return (props: any) => {
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-    useEffect(() => {
-      const handleMousePositionChange = (e: any) => {
-        setMousePosition({ x: e.clientX, y: e.clientY });
-      };
-      window.addEventListener("mousemove", handleMousePositionChange);
-      return () => {
-        window.removeEventListener("mousemove", handleMousePositionChange);
-      };
-    }, []);
-    return <WrappedComponent {...props} mousePosition={mousePosition} />;
+    return <WrappedComponent {...props} muscle={true} weight={"700"} />;
   };
 };
 
-const PanelMouseLogger = ({ mousePosition }: any) => {
-  return (
-    <div>
-      <p> Mouse position:</p>
-      <div>
-        <span> x: {mousePosition.x}</span>
-        <span> y: {mousePosition.y}</span>
-      </div>
-    </div>
-  );
-};
-
-const PointMouseLogger = ({ mousePosition }: any) => {
-  if (!mousePosition) {
-    return null;
-  }
-  return (
-    <p>
-      {mousePosition.x}
-      <p>{mousePosition.y}</p>
-    </p>
-  );
-};
+const MuscleEnrique = Gym(Enrique);
 
 function App() {
-  const TestComponent = withMousePosition(PanelMouseLogger);
-  const TestComponent2 = withMousePosition(PointMouseLogger);
   return (
     <>
-      <p>Test component</p>
-      <TestComponent />
-      <br />
-      <br />
-
-      <TestComponent2 />
+      <h1>Test component</h1>
+      <MuscleEnrique />
     </>
   );
 }
